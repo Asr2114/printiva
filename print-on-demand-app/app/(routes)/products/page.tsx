@@ -22,6 +22,7 @@ interface Product {
             data: {
                 attributes: {
                     name: string;
+                    slug?: string;
                 };
             };
         };
@@ -65,11 +66,14 @@ function ProductsPage() {
     const fetchCategories = async () => {
         try {
             const response = await fetch('/api/categories?populate=*');
-            const data = await response.json();
-            setCategories(data.map((cat: any) => ({
-                name: cat.attributes.name,
-                slug: cat.attributes.slug
-            })));
+            const payload = await response.json();
+            const data = payload?.data ?? payload; // our API returns { data: [...] }
+            setCategories(
+                (data || []).map((cat: any) => ({
+                    name: cat?.attributes?.name,
+                    slug: cat?.attributes?.slug ?? ''
+                }))
+            );
         } catch (error) {
             console.error('Error fetching categories:', error);
         }
@@ -78,8 +82,8 @@ function ProductsPage() {
     const filteredProducts = products.filter(product => {
         const matchesSearch = product.attributes.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
                              product.attributes.description.toLowerCase().includes(searchTerm.toLowerCase());
-        const matchesCategory = !selectedCategory || 
-                               product.attributes.category?.data?.attributes?.slug === selectedCategory;
+        const productSlug = product.attributes.category?.data?.attributes?.slug;
+        const matchesCategory = !selectedCategory || (productSlug ? productSlug === selectedCategory : false);
         
         return matchesSearch && matchesCategory;
     });
