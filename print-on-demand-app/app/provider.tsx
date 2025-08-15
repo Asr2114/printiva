@@ -15,12 +15,12 @@ function Provider({
 
     const [cart, setCart] = useState<any>([]);
 
-    //GET cart list
+
   
     
   return (
     <div>
-        {/* @ts-ignore */}
+
         <UserDetailContext.Provider value={{userDetail, setUserDetail}}>
           <CartContext.Provider value={{cart, setCart}}>
             <Header/>

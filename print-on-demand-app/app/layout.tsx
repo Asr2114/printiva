@@ -3,8 +3,6 @@ import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { GoogleOAuthProvider } from "@react-oauth/google";
 import Provider from "./provider";
-import Header from "./_components/Header";
-import Footer from "./_components/Footer";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -36,15 +34,12 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <GoogleOAuthProvider clientId={process.env.GOOGLE_CLIENT_ID!}>
-          <Provider>
-            <div className="min-h-screen flex flex-col">
-              <Header />
-              <main className="flex-1">
-                {children}
-              </main>
-              <Footer />
-            </div>
-          </Provider>
+        <div className="px-10 md:px-20 lg:px-36">
+         <Provider>
+          {children}
+         </Provider>
+        
+        </div>
         </GoogleOAuthProvider>
       </body>
     </html>
