@@ -23,13 +23,13 @@ const menu = [
     },
     {
         id:3,
-        name:"AboutUs",
-        path:'/aboutus'
+        name:"About Us",
+        path:'/about'
     },
     {
         id:4,
-        name:"ContactUs",
-        path:'/'
+        name:"Contact",
+        path:'/contact'
     },
 ]
 
@@ -78,7 +78,7 @@ const GetUserProfile=async(access_token:string)=>{
         { headers: { Authorization: `Bearer ${access_token}` } }
       );
   
-      console.log(tokenResponse);
+      console.log(userInfo);
       setUser(userInfo?.data);
       setUserDetail(userInfo?.data);
       SaveNewUser(userInfo?.data)
