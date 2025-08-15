@@ -12,8 +12,16 @@
 
 4. **Environment Variables** (Add in Vercel dashboard):
 ```
+# Strapi Backend URL (IMPORTANT: Update this after deploying backend)
+NEXT_PUBLIC_STRAPI_URL=https://your-backend-url.onrender.com/api
+
+# Strapi API Token (generate this in your production Strapi admin)
 STRAPI_API_TOKEN=your-production-strapi-api-token
+
+# Google OAuth
 GOOGLE_CLIENT_ID=654482578938-47s3n9bos386ml3krf7bqrpop61chnch.apps.googleusercontent.com
+
+# ImageKit
 NEXT_PUBLIC_IMAGEKIT_PRIVATE_KEY=private_JeE+sMuM8guysUWB6Nob4x32fRo=
 NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY=public_qNy2lF3XdfVlR2vojf4bGZfGsuY=
 NEXT_PUBLIC_IMAGEKIT_URLENDPOINT=https://ik.imagekit.io/asr21%
@@ -38,3 +46,24 @@ export const axiosClient = axios.create({
 1. Test all features
 2. Update any hardcoded localhost URLs
 3. Test cart functionality with production backend
+
+## Troubleshooting
+
+### Products Not Loading?
+1. **Check Environment Variables** in Vercel dashboard:
+   - `NEXT_PUBLIC_STRAPI_URL` should be: `https://your-backend-url.onrender.com/api`
+   - `STRAPI_API_TOKEN` should be a valid production token
+
+2. **Verify Backend is Running**:
+   - Visit your backend URL directly
+   - Check if `/api/products` endpoint works
+
+3. **Check Browser Console**:
+   - Look for CORS errors
+   - Check network requests to your backend
+
+4. **Common Issues**:
+   - Missing `/api` in backend URL
+   - Invalid API token
+   - Backend not deployed yet
+   - CORS configuration issues
