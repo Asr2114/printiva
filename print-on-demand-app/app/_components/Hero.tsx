@@ -1,7 +1,39 @@
+'use client'
+
 import Image from 'next/image'
-import React from 'react'
+import React, { useContext } from 'react'
+import { useGoogleLogin } from '@react-oauth/google'
+import { UserDetailContext } from '@/context/UserDetailContext'
 
 function Hero() {
+  const { userDetail } = useContext(UserDetailContext);
+
+  const googleLogin = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      console.log(tokenResponse);
+      localStorage.setItem('tokenResponse', JSON.stringify(tokenResponse))
+      // The login logic will be handled by the Header component
+      // We just need to trigger the login here
+    },
+    onError: errorResponse => console.log(errorResponse),
+  });
+
+  const handleGetStarted = () => {
+    if (userDetail) {
+      // User is logged in, scroll to popular products
+      const popularProductsSection = document.querySelector('.animate__fadeInUp');
+      if (popularProductsSection) {
+        popularProductsSection.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    } else {
+      // User is not logged in, trigger Google sign in
+      googleLogin();
+    }
+  };
+
   return (
     <div>
         <section className="bg-gray-900 dark:bg-gray-900 w-full">
@@ -27,12 +59,12 @@ function Hero() {
       
 
       <div className="mt-4 flex gap-4 sm:mt-6">
-        <a
-          className="inline-block rounded border border-primary bg-primary px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700"
-          href="#"
+        <button
+          onClick={handleGetStarted}
+          className="inline-block rounded border border-primary bg-primary px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-indigo-700 cursor-pointer"
         >
-          Get Started
-        </a>
+          {userDetail ? 'Browse Products' : 'Get Started'}
+        </button>
 
         <a
           className="inline-block rounded border border-gray-200 px-5 py-3 font-medium text-white shadow-sm transition-colors hover:bg-gray-50 hover:text-gray-900 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800 dark:hover:text-white"

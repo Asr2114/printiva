@@ -73,15 +73,38 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const response = await axiosClient.get('/products?populate=*');
-      const strapiData = response.data.data || [];
-      setStrapiProducts(strapiData);
+      // Use local API route instead of direct Strapi call
+      const response = await fetch('/api/products');
+      const data = await response.json();
+      console.log('Products API response:', data);
       
-      // Transform to expected Product type
-      const transformedProducts = strapiData.map(transformStrapiProduct);
-      setProducts(transformedProducts);
+      if (data && Array.isArray(data)) {
+        // Data is already in the correct format from local API
+        setProducts(data);
+        // Also set Strapi products for category filtering
+        setStrapiProducts(data.map((product: any) => ({
+          id: product.id,
+          attributes: {
+            title: product.title,
+            description: product.description,
+            pricing: product.pricing,
+            productimage: {
+              data: product.productimage?.map((img: any) => ({
+                attributes: { url: img.url }
+              })) || []
+            },
+            isFeatures: product.isFeatures,
+            size: product.size || [],
+            category: product.category || { data: { attributes: { name: '', slug: '' } } }
+          }
+        })));
+      } else {
+        console.error('Invalid products data format:', data);
+        setProducts([]);
+      }
     } catch (error) {
       console.error('Error fetching products:', error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
@@ -89,13 +112,22 @@ export default function ProductsPage() {
 
   const fetchCategories = async () => {
     try {
-      const response = await axiosClient.get('/categories?populate=*');
-      setCategories(response.data.data?.map((cat: any) => ({
-        name: cat.attributes.name,
-        slug: cat.attributes.slug
-      })) || []);
+      const response = await fetch('/api/categories');
+      const data = await response.json();
+      console.log('Categories API response:', data);
+      
+      if (data && Array.isArray(data)) {
+        setCategories(data.map((cat: any) => ({
+          name: cat.name,
+          slug: cat.slug
+        })));
+      } else {
+        console.error('Invalid categories data format:', data);
+        setCategories([]);
+      }
     } catch (error) {
       console.error('Error fetching categories:', error);
+      setCategories([]);
     }
   };
 
