@@ -18,7 +18,7 @@ import { NextResponse } from 'next/server';
 function ProductDetail() {
 
     const {productId} = useParams();
-    const [product, setProduct] = useState<Product[]>();
+    const [product, setProduct] = useState<Product>();
     const [loading, setLoading] = useState(false);
     const [enableCustomizeStudio, setEnableCustomizeStudio ] = useState(false);
     const { cart, setCart } = useContext(CartContext);
@@ -76,18 +76,12 @@ function ProductDetail() {
     >
     <div className='w-auto h-auto flex items-center justify-center'>
         {product? !enableCustomizeStudio? 
-        // @ts-ignore
-
-        <Image src={product?.productimage[0]?.url} 
-        // @ts-ignore
-
-        alt={product?.title} 
+        <Image src={product?.productimage?.[0]?.url} 
+        alt={product?.title || 'Product image'} 
         width={500} 
         height={500}
         className="rounded-xl shadow-lg object-cover"
         />:
-        // @ts-ignore
-
         <ProductCustomizeStudio product={product}
         setDesignUrl={(url:string)=>setDesignUrl(url)}
         />
