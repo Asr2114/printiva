@@ -73,8 +73,8 @@ export default function ProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      // Use local API route instead of direct Strapi call
-      const response = await fetch('/api/products');
+      // Use the same API call that PopularProducts uses
+      const response = await fetch('/api/products?isPopular=1');
       const data = await response.json();
       console.log('Products API response:', data);
       
@@ -189,11 +189,11 @@ export default function ProductsPage() {
           className="text-center mb-12"
         >
           <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
-            Our <span className="text-blue-600">Products</span>
+            Popular <span className="text-blue-600">Products</span>
           </h1>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Discover our collection of high-quality print-on-demand products. 
-            From custom t-shirts to personalized accessories, we've got everything you need.
+            Discover our most popular and trending print-on-demand products. 
+            From custom t-shirts to personalized accessories, these are the favorites our customers love.
           </p>
         </motion.div>
 
@@ -326,40 +326,7 @@ export default function ProductsPage() {
           </motion.div>
         )}
 
-        {/* Featured Products Section */}
-        {!searchTerm && !selectedCategory && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.6 }}
-            className="mt-20"
-          >
-            <div className="text-center mb-12">
-              <h2 className="text-3xl font-bold text-gray-900 mb-4">
-                Featured <span className="text-blue-600">Products</span>
-              </h2>
-              <p className="text-lg text-gray-600">
-                Check out our most popular and trending items
-              </p>
-            </div>
-            
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {products
-                .filter(product => product.isFeatures)
-                .slice(0, 6)
-                .map((product, index) => (
-                  <motion.div
-                    key={product.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.1 * index }}
-                  >
-                    <ProductCard product={product} />
-                  </motion.div>
-                ))}
-            </div>
-          </motion.div>
-        )}
+
       </div>
     </div>
   );
